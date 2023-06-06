@@ -129,9 +129,10 @@ async function getProfileData(req, res) {
 }
 
 // POST: LOGOUT user 
+//TODO: have login and signup check the blacklisted tokens and deny access **************************************
 async function logOut(req, res) {
   try {
-    const token = req.headers.authorization;
+    const token = req.headers.authorization.split(' ')[1];
 
     const collection = client.db(dbName).collection('blacklist');
     const result = await collection.insertOne({ token });
@@ -147,7 +148,7 @@ async function logOut(req, res) {
 // Generate JWT
 const generateToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, {
-    expiresIn: '1m',
+    expiresIn: '1h',
   });
 };
 
