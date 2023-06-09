@@ -36,7 +36,7 @@ async function validateJWT(req, res, next) {
       const blacklistedToken = await collection.findOne({ token });
 
       if (blacklistedToken) {
-        return res.status(401).json({ error: 'Token blacklisted. NOT TODAY BITCHES' });
+        return res.status(401).json({ error: 'Token blacklisted. NOT TODAY' });
       }
 
       req.user = user;
