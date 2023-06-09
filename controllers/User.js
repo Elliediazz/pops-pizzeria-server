@@ -144,7 +144,6 @@ async function logOut(req, res) {
   }
 }
 
-
 // Generate JWT
 const generateToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, {

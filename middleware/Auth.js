@@ -1,10 +1,17 @@
 const jwt = require('jsonwebtoken');
+const { MongoClient } = require('mongodb');
 
 if (process.env.ENV !== 'production') {
   require('dotenv').config();
 }
 
-function validateJWT(req, res, next) {
+// MongoDB connection
+const url = process.env.MONGO_URI;
+const dbName = 'PopsPizzeria';
+
+const client = new MongoClient(url);
+
+async function validateJWT(req, res, next) {
   const authHeader = req.headers.authorization;
   //console.log(authHeader)
   if (!authHeader) {
@@ -19,14 +26,19 @@ function validateJWT(req, res, next) {
 
   try {
     const jwtSecretKey = process.env.JWT_SECRET;
-    jwt.verify(token, jwtSecretKey, (err, user) => {
+    jwt.verify(token, jwtSecretKey, async (err, user) => {
       if (err) {
-        if (err.name === 'TokenExpiredError') {
-          return res.status(401).json({ error: 'Token expired' });
-        } else {
-          return res.status(500).json({ error: 'Token validation error', err });
-        }
+        return res.status(500).json({ error: 'Token validation error', err });
       }
+
+      // If token is not expired, check if it exists in blacklist collection
+      const collection = client.db(dbName).collection('blacklist');
+      const blacklistedToken = await collection.findOne({ token });
+
+      if (blacklistedToken) {
+        return res.status(401).json({ error: 'Token blacklisted. NOT TODAY BITCHES' });
+      }
+
       req.user = user;
       next();
     });
