@@ -1,2 +1,4 @@
 node_modules
 .env
+exportSpecials.js
+exportMenu.js

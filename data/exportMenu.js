@@ -1,9 +1,9 @@
 const { MongoClient } = require("mongodb");
 const path = require("path");
+require('dotenv').config();
 
-
-// MongoDB Connection
-const uri = "mongodb+srv://elliediazz:gokoUUOcBmxJ6Zcm@cluster0.tgkwluy.mongodb.net/?retryWrites=true&w=majority";
+// MongoDB connection
+const url = process.env.MONGO_URI
 const dbName = "PopsPizzeria";
 const collectionName = "menuItems";
 
