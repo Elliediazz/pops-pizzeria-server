@@ -1,7 +1,8 @@
+require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { MongoClient } = require('mongodb');
-require('dotenv').config();
+const validator = require('validator');
 
 // MongoDB connection
 const url = process.env.MONGO_URI;
@@ -34,9 +35,27 @@ async function signUp(req, res) {
   try {
     const { name, email, password } = req.body;
 
-    if (!name || !email || !password) {
-      res.status(400);
-      throw new Error('Please add required fields');
+    // Validate sign-up form data
+    const errors = {};
+
+    if (validator.isEmpty(name)) {
+      errors.name = 'Name is required';
+    }
+
+    if (!validator.isEmail(email)) {
+      errors.email = 'Email is invalid';
+    }
+
+    if (validator.isEmpty(password)) {
+      errors.password = 'Password is required';
+    } else if (!validator.isLength(password, { min: 8 })) {
+      errors.password = 'Password must be at least 8 characters long';
+    } else if (!/\d/.test(password) || !/[a-zA-Z]/.test(password)) {
+      errors.password = 'Password must contain at least one letter and one number';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({ errors });
     }
 
     const collection = client.db(dbName).collection(collectionName);
@@ -59,19 +78,17 @@ async function signUp(req, res) {
 
     const token = generateToken(newUser._id);
 
-    if (newUser) {
-      res.status(201).json({
-        user:{
-          _id: newUser._id,
-          name: newUser.name,
-          email: newUser.email,
-        },
-        token: token
-      });
-    }
+    res.status(201).json({
+      user: {
+        _id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+      },
+      token,
+    });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
-    console.log(error)
+    console.log(error);
   }
 }
 
