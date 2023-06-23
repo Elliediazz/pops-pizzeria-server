@@ -5,12 +5,12 @@ const express = require('express')
 const cors = require('cors')
 
 const menuItemRoutes = require('./routes/MenuItems.js')
-const menuItemsController = require('./controllers/MenuItems');
-const specialsItemRoutes = require('./routes/SpecialsItems')
-const specialsItemsController = require('./controllers/SpecialsItems');
-const usersRoutes = require('./routes/User')
-const usersController  = require('./controllers/User')
-const stripe = require('./routes/Stripe')
+const menuItemsController = require('./controllers/MenuItems.js');
+const specialsItemRoutes = require('./routes/SpecialsItems.js')
+const specialsItemsController = require('./controllers/SpecialsItems.js');
+const usersRoutes = require('./routes/User.js')
+const usersController  = require('./controllers/User.js')
+const stripe = require('./routes/Stripe.js')
 
 const app = express()
 
