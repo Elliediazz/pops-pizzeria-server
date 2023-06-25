@@ -1,4 +1,6 @@
-require("dotenv").config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 const router = require('express').Router()
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 
@@ -13,7 +15,8 @@ router.post('/checkout', async (req, res) => {
                 name: item.name,
                 ...(item.image ? { image: [item.image] } : {}),
                 metadata:{
-                  id: item._id
+                  id: item._id,
+                  note: note
                 }
               },
               unit_amount: Math.round(item.price * 100),
