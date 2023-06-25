@@ -1,11 +1,11 @@
 if (process.env.ENV !== 'production') {
     require('dotenv').config();
-  }
+}
 const { MongoClient } = require("mongodb");
 const path = require("path");
 
 // MongoDB connection
-const url = process.env.MONGO_URI
+const uri = process.env.MONGO_URI
 const dbName = "PopsPizzeria";
 const collectionName = "menuItems";
 

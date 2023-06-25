@@ -1,9 +1,9 @@
-if (process.env.ENV !== 'production') {
-  require('dotenv').config();
-}
 const jwt = require('jsonwebtoken');
 const { MongoClient } = require('mongodb');
 
+if (process.env.ENV !== 'production') {
+  require('dotenv').config();
+}
 
 // MongoDB connection
 const url = process.env.MONGO_URI;
