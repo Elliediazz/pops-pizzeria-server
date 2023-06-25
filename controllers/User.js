@@ -1,4 +1,6 @@
-require('dotenv').config();
+if (process.env.ENV !== 'production') {
+  require('dotenv').config();
+}
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { MongoClient } = require('mongodb');

@@ -1,4 +1,6 @@
-require('dotenv').config();
+if (process.env.ENV !== 'production') {
+    require('dotenv').config();
+  }
 const { MongoClient } = require("mongodb");
 const path = require("path");
 
