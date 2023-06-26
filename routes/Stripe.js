@@ -14,6 +14,7 @@ router.post('/checkout', async (req, res) => {
         name: item.name,
         ...(item.image ? { image: [item.image] } : {}),
         metadata: {
+          selectedOption: JSON.stringify(item.options),
           id: item._id,
           note: note,
         },

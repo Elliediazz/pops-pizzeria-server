@@ -21,7 +21,7 @@ const specialsMenu = [
       endTime: "",
       options: [
           {
-              name: "Choice of Pasta or Salad",
+              name: "Choice of:",
               choices: [
                   "Baked Ziti",
                   "Garden Salad",
@@ -56,13 +56,20 @@ const specialsMenu = [
       endTime: "",
       options: [
           {
-              name: "Choice of Pasta",
+              name: "Choice of:",
               choices: [
-                  "Linguine or Ziti with Marinara",
-                  "Linguine or Ziti with Meat Sauce",
-                  "Linguine or Ziti with Sausage",
-                  "Linguine or Ziti with Meatball",
-                  "Linguine or Ziti with White or Red Clam Sauce",
+                  "Linguine with Marinara",
+                  "Linguine with Meat Sauce",
+                  "Linguine with Sausage",
+                  "Linguine with Meatball",
+                  "Linguine with White Clam Sauce",
+                  "Linguine with Red Clam Sauce",
+                  "Ziti with Marinara",
+                  "Ziti with Meat Sauce",
+                  "Ziti with Sausage",
+                  "Ziti with Meatball",
+                  "Ziti with White Clam Sauce",
+                  "Ziti with Red Clam Sauce",
                   "Baked Ziti",
                   "Baked Ziti Sicilian Style",
                   "Baked Stuffed Shells",
