@@ -28,6 +28,7 @@ app.use(
       allowedHeaders: ['Content-Type', 'Authorization'],
     })
 );
+app.use('/webhook', express.raw({type: '*/*'}))
 
 //HomeTest
 app.get('/', (req, res) => {
