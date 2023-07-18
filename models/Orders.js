@@ -5,6 +5,14 @@ const OrderSchema = new mongoose.Schema({
         type: String, 
         require: true
     },
+    customerId: { 
+        type: String, 
+        require: false
+    },
+    PaymentIntentId: { 
+        type: String, 
+        require: false
+    },
     products: [
         {
             _id: {
@@ -34,7 +42,7 @@ const OrderSchema = new mongoose.Schema({
             // need to incorperate in client
             cartQuantity: {
                 type: Number, 
-                required: true
+                required: false
             }
         },
     ],
@@ -49,7 +57,7 @@ const OrderSchema = new mongoose.Schema({
     // delivery or pick up
     orderType: { 
         type: String, 
-        required: true
+        required: false
     }, 
     // delivery address
     delivery: { 
@@ -62,8 +70,8 @@ const OrderSchema = new mongoose.Schema({
     },
     payment_status:{ 
         type: String, 
-        required: true
+        required: false
     },
 }, {timestamps: true});
 
-module.exports = mongoose.model('Orders', OrderSchema)
+module.exports = mongoose.model('Order', OrderSchema)

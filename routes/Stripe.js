@@ -2,6 +2,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 const express = require('express');
+const Order = require('../models/Orders');
 const router = express.Router();
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 
@@ -43,6 +44,32 @@ router.post('/checkout', async (req, res) => {
   res.send({ url: session.url });
 });
 
+//Create Order
+const createOrder = async (customer, data) => {
+  const Items = JSON.parse (customer.metadata.cart);
+  
+  const newOrder = new Order({
+    userId: customer.metadata.userId, //need to add
+    customerId: data.customer,
+    paymentIntentId: data.payment_intent,
+    products: Items,
+    subtotal: data.amount_subtotal,
+    total: data.amount_total,
+    payment_status: data.payment_status 
+  })
+
+    try {
+      const savedOrder = await newOrder.save()
+
+      console.log("Processed order:", savedOrder)
+      //email the customer
+      //email Pizzeria 
+
+    }catch(err){
+      console.log(err)
+    }
+}
+
 // Stripe webhook 
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
 let endpointSecret;
@@ -78,8 +105,8 @@ if (eventType === "checkout.session.completed") {
   stripe.customers
   .retrieve(data.customer)
   .then((customer) => {
-    console.log(customer)
-    console.log("data:",data)
+    createOrder(customer,data)
+    
   }).catch(err => console.log(err.message))
 }
 

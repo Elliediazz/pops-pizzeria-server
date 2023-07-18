@@ -3,6 +3,7 @@ if (process.env.ENV !== 'production') {
 }
 const express = require('express')
 const cors = require('cors')
+const mongoose = require('mongoose');
 
 const menuItemRoutes = require('./routes/MenuItems.js')
 const menuItemsController = require('./controllers/MenuItems.js');
@@ -43,4 +44,15 @@ app.use('/stripe', stripe)
 
 // Listen for connection 
 const PORT = process.env.PORT
-app.listen(PORT, () => {console.log(`listening on port ${PORT}`)});
+app.listen(PORT, () => {
+    //DB connection
+    mongoose.connect(process.env.MONGO_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        dbName: 'PopsPizzeria'
+      })
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('Error connecting to MongoDB', err));
+
+    console.log(`listening on port ${PORT}`)
+});
