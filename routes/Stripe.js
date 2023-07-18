@@ -5,9 +5,11 @@ const express = require('express');
 const Order = require('../models/Orders');
 const router = express.Router();
 const stripe = require('stripe')(process.env.STRIPE_KEY);
+const endpointSecret = process.env.ENDPOINT_SECRET
 
 router.post('/checkout', async (req, res) => {
   const { items, note } = req.body;
+  console.log(items)
 
   const customer = await stripe.customers.create({
     metadata:{
@@ -23,7 +25,7 @@ router.post('/checkout', async (req, res) => {
         name: item.name,
         ...(item.image ? { image: [item.image] } : {}),
         metadata: {
-          selectedOption: JSON.stringify(item.options),
+          selectedOption: item.Options,
           id: item._id,
           note: note,
         },
@@ -32,7 +34,7 @@ router.post('/checkout', async (req, res) => {
     },
     quantity: item.quantity,
   }));
-
+  
   const session = await stripe.checkout.sessions.create({
     customer: customer.id,
     line_items: lineItems,
@@ -47,6 +49,7 @@ router.post('/checkout', async (req, res) => {
 //Create Order
 const createOrder = async (customer, data) => {
   const Items = JSON.parse (customer.metadata.cart);
+  
   
   const newOrder = new Order({
     userId: customer.metadata.userId, //need to add
@@ -71,44 +74,38 @@ const createOrder = async (customer, data) => {
 }
 
 // Stripe webhook 
-// This is your Stripe CLI webhook secret for testing your endpoint locally.
-let endpointSecret;
-// const endpointSecret = process.env.ENDPOINT_SECRET
-
-router.post('/webhook', express.raw({type: 'application/json'}), (req, res) => {
+router.post('/webhook', (req, res,) => {
   const sig = req.headers['stripe-signature'];
 
-  let data;
-  let eventType;
+  let event;
 
-  if(endpointSecret){
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+    console.log('webhook verified')
 
-    let event;
+  } catch (err) {
+    console.log("webhook error:", err)
+    res.status(400).send(`Webhook Error: ${err.message}`);
 
-    try {
-      event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-      console.log('webhook verified')
-    } catch (err) {
-      console.log("webhook eroor:", err)
-      res.status(400).send(`Webhook Error: ${err.message}`);
-      return;
-    }
-
-    data = event.data.object;
-    eventType= event.type
-  }else{
-    data = req.body.data.object;
-    eventType = req.body.type
+    return;
   }
+
+  let eventType = event.type;
+  let data = event.data.object;
+   console.log(eventType)
+  // console.log(data)
+
   //handle the event
-if (eventType === "checkout.session.completed") {
-  stripe.customers
-  .retrieve(data.customer)
-  .then((customer) => {
-    createOrder(customer,data)
-    
-  }).catch(err => console.log(err.message))
-}
+  if (eventType === "checkout.session.completed") {
+    stripe.customers
+    .retrieve(data.customer)
+    .then((customer) => {
+      console.log(customer)
+      console.log("data:", data)
+      createOrder(customer,data)
+      
+    }).catch(err => console.log(err.message))
+  }
 
   // Return a 200 res to acknowledge receipt of the event
   res.send().end();

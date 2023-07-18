@@ -20,6 +20,7 @@ specialsItemsController.connect();
 usersController.connect()
 
 // middleware
+app.use('/stripe/webhook', express.raw({type: '*/*'}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -29,7 +30,6 @@ app.use(
       allowedHeaders: ['Content-Type', 'Authorization'],
     })
 );
-app.use('/webhook', express.raw({type: '*/*'}))
 
 //HomeTest
 app.get('/', (req, res) => {
