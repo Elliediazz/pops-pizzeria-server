@@ -4,6 +4,8 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express');
 const Order = require('../models/Orders');
 const router = express.Router();
+const nodemailer = require('nodemailer');
+
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 const endpointSecret = process.env.ENDPOINT_SECRET
 
@@ -50,7 +52,6 @@ router.post('/checkout', async (req, res) => {
 const createOrder = async (customer, data) => {
   const Items = JSON.parse (customer.metadata.cart);
   
-  
   const newOrder = new Order({
     userId: customer.metadata.userId, //need to add
     customerId: data.customer,
@@ -65,8 +66,60 @@ const createOrder = async (customer, data) => {
       const savedOrder = await newOrder.save()
 
       console.log("Processed order:", savedOrder)
-      //email the customer
-      //email Pizzeria 
+
+      //email the customer confirmation
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+        }
+      });
+
+      var mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: data.customer_details.email,
+        subject: 'Thank you for your purchase with Pops Pizzeria!',
+        text: `Thank you for your Purchase with Pops Pizzeria! your Order ID is: ${data.id}. 
+              Your order might take some time to process.
+              If you have any questions please contact us at Tel: (631) 736-3957 `
+      };
+
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+
+      //email Pizzeria (need to customize for JJ)
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+        }
+      });
+
+      var mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_TEST,
+        subject: 'NEW INCOMING ORDER',
+        text: ` Customer name: ${data.customer_details.name},
+               Customer Phone Number: ${data.customer_details.phone},
+               Order Type: Delivery or pick up, 
+               Order Details: ${savedOrder}`
+      };
+
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+
 
     }catch(err){
       console.log(err)
@@ -93,7 +146,7 @@ router.post('/webhook', (req, res,) => {
   let eventType = event.type;
   let data = event.data.object;
    console.log(eventType)
-  // console.log(data)
+   console.log(data)
 
   //handle the event
   if (eventType === "checkout.session.completed") {
