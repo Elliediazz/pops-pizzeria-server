@@ -13,29 +13,29 @@ const menu = [
   {
     name: "Sicilian Slice",
     price: 3.25,
-    description: "A thin, crispy crust that is topped with a simple tomato sauce, slices of fresh mozzarella cheese, and fresh basil leaves. The sauce is usually made with San Marzano tomatoes, which are known for their sweet flavor and low acidity.",
-    img: "",
+    description: "Savor a generous square-cut piece topped with robust tomato sauce, premium mozzarella cheese, and a medley of savory toppings",
+    img: "https://f005.backblazeb2.com/file/PopsPizzeriaMenuImg/SquareMarg.jpg",
     category: "Pizza"
 },
 {
     name: "Regular Slice",
     price: 2.75,
     description: "",
-    img: "",
+    img: "https://f005.backblazeb2.com/file/PopsPizzeriaMenuImg/Cheesenpep.jpg",
     category: "Pizza"
 },
 {
     name: "Regular Pie (18\")",
     price: 17.25,
     description: "",
-    img: "",
+    img: "https://f005.backblazeb2.com/file/PopsPizzeriaMenuImg/macnchzpie.jpg",
     category: "Pizza"
 },
 {
     name: "Sicilian Pizza Pie",
     price: 21.80,
     description: "",
-    img: "",
+    img: "https://f005.backblazeb2.com/file/PopsPizzeriaMenuImg/supremepizza.jpg",
     category: "Pizza"
 },
 {
@@ -63,13 +63,13 @@ const menu = [
     name: "Buffalo Chicken Pie",
     price: 26.00,
     description: "",
-    img: "",
+    img: "https://f005.backblazeb2.com/file/PopsPizzeriaMenuImg/SpiceyChicken.jpg",
     category: "Pizza"
 },
 {
     name: "BBQ Chicken Pie",
     price: 26.00,
-    description: "",
+    description: "https://f005.backblazeb2.com/file/PopsPizzeriaMenuImg/BBQandalfredo.jpg",
     img: "",
     category: "Pizza"
 },
