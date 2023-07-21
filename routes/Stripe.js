@@ -25,7 +25,7 @@ router.post('/checkout', async (req, res) => {
       currency: 'usd',
       product_data: {
         name: item.name,
-        ...(item.image ? { image: [item.image] } : {}),
+        ...(item.img ? { image: [item.img] } : {}),
         metadata: {
           selectedOption: item.Options,
           id: item._id,
